@@ -19,6 +19,10 @@ public class StringGrab : MonoBehaviour
 
     private bool _isGrabed = false;
     private ArrowController _arrow = null;
+    private XRGrabInteractable _arrowInter = null;
+
+    [SerializeField] Transform _arrowAlign;
+    [SerializeField] Transform _grabPos;
 
     private void Update()
     {
@@ -34,6 +38,13 @@ public class StringGrab : MonoBehaviour
             this.transform.position = _anchorPos.position;
             
             _isGrabed = true;
+
+            if(_arrow != null)
+            {
+                _arrow.transform.LookAt(_arrowAlign);
+                //_arrow.transform.rotation = Quaternion.LookRotation(_arrowAlign.transform.position - _grabPos.transform.position);
+                //_arrow.transform.position = new Vector3(_arrowAlign.position.x, _arrowAlign.position.y, _grabPos.position.z);
+            }
         }
         else if(_checker.IsSelecting == false && _isGrabed)
         {
@@ -42,6 +53,10 @@ public class StringGrab : MonoBehaviour
             if(_arrow != null)
             {
                 _arrow.Shoot(pullDist * 10f);
+
+                _arrowInter.trackRotation = true;
+
+                _arrowInter = null;
                 _arrow = null;
             }
 
@@ -77,7 +92,11 @@ public class StringGrab : MonoBehaviour
             XRBaseInteractable obj = _interactor.selectTarget;
 
             if(obj.TryGetComponent<ArrowController>(out ArrowController arrow))
-                { _arrow = arrow; }
+            { 
+                _arrow = arrow;
+                _arrowInter = arrow.GetComponent<XRGrabInteractable>();
+                _arrowInter.trackRotation = false;
+            }
         }
     }
 

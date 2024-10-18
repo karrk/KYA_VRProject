@@ -8,7 +8,8 @@ public class ArrowController : MonoBehaviour
 {
     [SerializeField] private XRGrabInteractable _interactor = null;
     [SerializeField] private Rigidbody _rb;
-    [SerializeField] private Transform _head;
+    [SerializeField] public Transform Head;
+    [SerializeField] public Transform Tail;
 
     private void Start()
     {
@@ -22,6 +23,6 @@ public class ArrowController : MonoBehaviour
 
     public void Shoot(float m_power)
     {
-        _rb.AddForce(_head.forward * m_power, ForceMode.Impulse);
+        _rb.AddForce(Head.forward * m_power, ForceMode.Impulse);
     }
 }
