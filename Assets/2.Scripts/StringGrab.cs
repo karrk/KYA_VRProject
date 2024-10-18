@@ -13,10 +13,12 @@ public class StringGrab : MonoBehaviour
 
     private Transform _anchorPos = null;
 
-    [SerializeField] private float _minDist;
-    [SerializeField] private Transform _initTr;
+    private XRBaseInteractor _interactor = null;
+    [SerializeField] private float _minDist = default;
+    [SerializeField] private Transform _initTr = null;
 
     private bool _isGrabed = false;
+    private ArrowController _arrow = null;
 
     private void Update()
     {
@@ -35,17 +37,13 @@ public class StringGrab : MonoBehaviour
         }
         else if(_checker.IsSelecting == false && _isGrabed)
         {
-            //float pullDist = Vector3.Distance(_initTr.position, transform.position);
-            //Debug.Log(pullDist);
-
-            //if (pullDist <= _minDist)
-            //{
-            //    ResetString();
-            //}
-            //else
-            //{
-
-            //}
+            float pullDist = Vector3.Distance(_initTr.position, transform.position);
+            
+            if(_arrow != null)
+            {
+                _arrow.Shoot(pullDist * 10f);
+                _arrow = null;
+            }
 
             ResetString();
 
@@ -69,8 +67,17 @@ public class StringGrab : MonoBehaviour
 
         if(_anchorPos == null)
         {
+                _interactor = other.GetComponent<XRBaseInteractor>();
             _checker = other.GetComponent<SelectChecker>();
             _anchorPos = _checker.GetComponentInParent<ActionBasedController>().modelParent;
+        }
+
+        if(_interactor.selectTarget != null)
+        {
+            XRBaseInteractable obj = _interactor.selectTarget;
+
+            if(obj.TryGetComponent<ArrowController>(out ArrowController arrow))
+                { _arrow = arrow; }
         }
     }
 
