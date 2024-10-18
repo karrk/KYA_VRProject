@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
@@ -30,6 +31,8 @@ public class Manager : MonoBehaviour
         //}
 
         Init();
+        DOTween.Init(false, true, LogBehaviour.Verbose);
+        DOTween.SetTweensCapacity(50, 200);
     }
 
     private EventManager _event = null;
