@@ -61,5 +61,6 @@ public class Manager : MonoBehaviour
         Event.Init();
         Pool.Init();
         SFX.Init();
+        Data.Init();
     }
 }
