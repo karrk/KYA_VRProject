@@ -63,4 +63,19 @@ public class Manager : MonoBehaviour
         SFX.Init();
         Data.Init();
     }
+
+    public void AttackDoor(int m_power)
+    {
+        Manager.Instance.Data.DoorHP -= m_power;
+
+        if(Manager.Instance.Data.DoorHP <= 0)
+        {
+            DefeatGame();
+        }
+    }
+
+    private void DefeatGame()
+    {
+
+    }
 }

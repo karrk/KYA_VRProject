@@ -5,6 +5,7 @@ public class DataManager : CoreComponent
     protected override void InitOptions()
     {
         SetDestData();
+        DoorHP = 3;
     }
 
     private PoolData _poolData = new PoolData()
@@ -27,7 +28,7 @@ public class DataManager : CoreComponent
         return _destData.Destinations[(int)e_dest];
     }
 
-    
+    public int DoorHP = default;
 }
 
 public struct PoolData
