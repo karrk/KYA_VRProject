@@ -13,7 +13,7 @@ public class DataManager : CoreComponent
         InitPoolCount = 5
     };
 
-    public int InitPoolCount;
+    public int InitPoolCount => _poolData.InitPoolCount;
 
     private DestinationData _destData = new DestinationData();
 
@@ -29,6 +29,8 @@ public class DataManager : CoreComponent
     }
 
     public int DoorHP = default;
+
+    public ArrowSpawner ArrowSpawner = null;
 }
 
 public struct PoolData

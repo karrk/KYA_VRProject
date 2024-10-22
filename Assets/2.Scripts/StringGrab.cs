@@ -24,6 +24,10 @@ public class StringGrab : MonoBehaviour
     [SerializeField] Transform _arrowAlign;
     [SerializeField] Transform _grabPos;
 
+    [SerializeField] float _pullDist = 0f;
+    [SerializeField] float _maxPullDist = 1f;
+    [SerializeField] float _maxPower = 100f;
+
     private void Update()
     {
         if (_contactHand == false || (_checker.IsSelecting == false && _isGrabed == false))
@@ -32,27 +36,30 @@ public class StringGrab : MonoBehaviour
             return;
         }
             
-
         if (_checker.IsSelecting)
         {
+            _pullDist = Vector3.Distance(_initTr.position, transform.position);
+
             this.transform.position = _anchorPos.position;
             
             _isGrabed = true;
 
             if(_arrow != null)
             {
+                _arrow.Power = ConvertDistToPower(_pullDist);
                 _arrow.transform.LookAt(_arrowAlign);
-                //_arrow.transform.rotation = Quaternion.LookRotation(_arrowAlign.transform.position - _grabPos.transform.position);
-                //_arrow.transform.position = new Vector3(_arrowAlign.position.x, _arrowAlign.position.y, _grabPos.position.z);
             }
         }
+
         else if(_checker.IsSelecting == false && _isGrabed)
         {
-            float pullDist = Vector3.Distance(_initTr.position, transform.position);
-            
+             
+            // 당겨진 거리를 반환받고,
+
             if(_arrow != null)
             {
-                _arrow.Shoot(pullDist * 10f);
+                _arrow.Shoot();
+                Debug.Log(_arrow.Power);
 
                 _arrowInter.trackRotation = true;
 
@@ -66,6 +73,14 @@ public class StringGrab : MonoBehaviour
 
             _isGrabed = false;
         }
+    }
+
+    private float ConvertDistToPower(float m_dist)
+    {
+        m_dist = Mathf.Clamp(m_dist, 0, _maxPullDist);
+        float power = Mathf.Pow((m_dist / _maxPullDist), 2) * _maxPower;
+
+        return power;
     }
 
     private void ResetString()
@@ -82,7 +97,7 @@ public class StringGrab : MonoBehaviour
 
         if(_anchorPos == null)
         {
-                _interactor = other.GetComponent<XRBaseInteractor>();
+            _interactor = other.GetComponent<XRBaseInteractor>();
             _checker = other.GetComponent<SelectChecker>();
             _anchorPos = _checker.GetComponentInParent<ActionBasedController>().modelParent;
         }

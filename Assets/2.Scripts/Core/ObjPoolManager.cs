@@ -17,7 +17,7 @@ public class ObjPoolManager : CoreComponent
         _mainPoolDirectory.SetParent(Manager.Instance.transform);
         _mainPoolDirectory.name = "Pools";
 
-        //CreatePools();
+        CreatePools();
     }
 
     private void CreatePools()
@@ -47,7 +47,7 @@ public class ObjPoolManager : CoreComponent
         return _poolTable[m_type].GetObject();
     }
 
-    public IPooledObj GetObjecgt(E_PoolType m_type,Transform m_parent)
+    public IPooledObj GetObject(E_PoolType m_type,Transform m_parent)
     {
         IPooledObj obj = GetObject(m_type);
         obj.GameObject.transform.SetParent(m_parent);

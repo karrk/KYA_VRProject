@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MonsterMovement : MonoBehaviour
+public class MonsterMovement : MonoBehaviour, IPooledObj
 {
     [SerializeField] private NavMeshAgent _nav = null;
     [SerializeField] private Transform _goal = null;
@@ -25,6 +25,8 @@ public class MonsterMovement : MonoBehaviour
 
     private Transform _door = null;
     [SerializeField] private int _hp = 2;
+
+    private List<ArrowController> _contactedArrows = new List<ArrowController>();
 
     private E_MonsterState _state = E_MonsterState.Idle;
     public E_MonsterState State
@@ -56,9 +58,18 @@ public class MonsterMovement : MonoBehaviour
         }
     }
 
+    public E_PoolType MyPoolType => E_PoolType.Monster;
+
+    public GameObject GameObject => this.gameObject;
+
     private void Start()
     {
         Init();
+    }
+
+    public void AddArrow(ArrowController m_arrow)
+    {
+        this._contactedArrows.Add(m_arrow);
     }
 
     public void Init()
@@ -92,6 +103,8 @@ public class MonsterMovement : MonoBehaviour
 
         if (this._hp <= 0)
             State = E_MonsterState.Dead;
+        else
+            State = E_MonsterState.Move;
     }
 
 
@@ -176,6 +189,25 @@ public class MonsterMovement : MonoBehaviour
 
     public void FinishDeadAction()
     {
-
+        //Debug.Log("Á×À½ ¾Ö´Ï¸ÞÀÌ¼Ç Á¾·áµÊ");
+        Return();
     }
+
+    private void ReturnArrows()
+    {
+        foreach (var arrow in _contactedArrows)
+        {
+            arrow.Return();
+        }
+
+        _contactedArrows.Clear();
+    }
+
+    public void Return()
+    {
+        ReturnArrows();
+
+        Manager.Instance.Pool.ReturnObject(this);
+    }
+
 }

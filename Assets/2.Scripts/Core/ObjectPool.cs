@@ -35,7 +35,6 @@ public class ObjectPool
         {
             IPooledObj newObj = GameObject.Instantiate(_prefab.GameObject).GetComponent<IPooledObj>();
             newObj.GameObject.SetActive(false);
-            newObj.SetPoolType(_type);
             newObj.GameObject.transform.SetParent(_directory);
 
             _list.Add(newObj);
@@ -52,6 +51,7 @@ public class ObjectPool
 
         IPooledObj obj = _list[_list.Count - 1];
         obj.GameObject.SetActive(true);
+        _list.RemoveAt(_list.Count-1);
 
         return obj;
     }
